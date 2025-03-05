@@ -19,9 +19,6 @@ public class Order {
     private BigDecimal total;
     private static int counter;
 
-    public Order(int orderNumber) {
-        this.orderNumber = orderNumber;
-    }
 
     public int getOrderNumber() {
         return orderNumber;
@@ -110,5 +107,37 @@ public class Order {
 
     public static void setCounter(int counter) {
         Order.counter = counter;
+    }
+
+    public void setMaterialCost(BigDecimal materialCost) {
+        this.materialCost = materialCost;
+    }
+
+    public BigDecimal getMaterialCost() {
+        return materialCost;
+    }
+
+    public void setLaborCost(BigDecimal laborCost) {
+        this.laborCost = laborCost;
+    }
+
+    public void setTax(BigDecimal tax) {
+        this.tax = tax;
+    }
+
+    public void setTotal(BigDecimal total) {
+        this.total = total;
+    }
+
+    public BigDecimal getTax() {
+        return tax;
+    }
+
+    public BigDecimal getLaborCost() {
+        return laborCost;
+    }
+
+    public BigDecimal getTotal() {
+        return total;
     }
 }

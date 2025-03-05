@@ -44,6 +44,8 @@ public class UserIOImpl implements UserIO{
     public BigDecimal readBigDecimal(String prompt) {
         System.out.println(prompt);
         String input = scanner.nextLine();
-        return BigDecimal.valueOf(Long.parseLong(input));
+        return new BigDecimal(input);
     }
+
+
 }

@@ -14,5 +14,5 @@ public interface UserIO {
 
     LocalDate readLocalDate(String prompt);
 
-    BigDecimal readBigDecimal(String prompt);
+    BigDecimal readBigDecimal(String s);
 }

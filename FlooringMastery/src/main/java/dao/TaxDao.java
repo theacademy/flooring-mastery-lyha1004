@@ -10,4 +10,6 @@ public interface TaxDao {
     BigDecimal getStateTax(String state);
     Tax unmarshallStateTax(String stateTaxInfo);
     void loadTaxInfo();
+
+    Tax getTaxByState(String oh);
 }

@@ -7,6 +7,11 @@ public class Tax {
     private String stateName;
     private BigDecimal taxRate;
 
+    public Tax(String stateAbbreviation, BigDecimal taxRate) {
+        this.stateAbbreviation = stateAbbreviation;
+        this.taxRate = taxRate;
+    }
+
     public BigDecimal getTaxRate() {
         return taxRate;
     }
