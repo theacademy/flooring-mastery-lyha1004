@@ -21,7 +21,7 @@ public interface OrderService {
     BigDecimal calculateLaborCost(Order order);
     BigDecimal calculateTax(Order order);
     BigDecimal calculateTotal(Order order);
-    boolean validateOrder(Order order);
+    void validateOrder(Order order);
     Product getProductByType(String type);
     List<Product> getAllProducts();
     Tax getTaxByState(String state);

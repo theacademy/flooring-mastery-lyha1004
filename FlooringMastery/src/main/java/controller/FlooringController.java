@@ -2,6 +2,7 @@ package controller;
 
 import dao.*;
 import dto.Order;
+import dto.Product;
 import org.springframework.cglib.core.Local;
 import service.DataValidationException;
 import java.time.format.DateTimeParseException;
@@ -23,7 +24,7 @@ public class FlooringController {
     private ProductDao productDao = new ProductDaoImpl();
     private TaxDao taxDao = new TaxDaoImpl();
     private UserIO io = new UserIOImpl();
-    private OrderService service = new OrderServiceImpl();
+    private OrderService service = new OrderServiceImpl(orderDao, productDao, taxDao);
 
     public void run() {
         boolean keepGoing = true;
@@ -37,7 +38,6 @@ public class FlooringController {
                     io.print("Display");
                     break;
                 case 2:
-                    io.print("Add");
                     createOrder();
                     break;
                 case 3:
@@ -67,79 +67,29 @@ public class FlooringController {
         boolean validOrder = false;
         while (!validOrder) {
             try {
-                LocalDate orderDate = null;
-                while (orderDate == null) {
-                    try {
-                        String orderDateString = io.readString("Enter order date (MM/dd/yyyy): ");
-                        orderDate = service.validateDate(orderDateString);
-                        if (orderDate.isBefore(LocalDate.now())) {
-                            throw new IllegalArgumentException("Order Date must be in the future.");
-                        }
-                    } catch (DateTimeParseException e) {
-                        io.print("Invalid date format. Please try again using MM/dd/yyyy");
-                    } catch (IllegalArgumentException e) {
-                        io.print(e.getMessage());
-                        orderDate = null;
-                    }
-                }
 
+                List<Product> products = productDao.readProducts();
 
-                String customerName = null;
-                while (customerName == null) {
-                    try {
-                        customerName = service.validateName(io.readString("Enter customer name: "));
-                    } catch (IllegalArgumentException e) {
-                        io.print("Invalid name. Please try again. Characters are limited to [a-z][0-9] as well as periods and commas.");
-                    }
-                }
-
-                String state = null;
-                while (state == null) {
-                    try {
-                        state = service.validateState(io.readString("Enter State: "));
-                    } catch (IllegalArgumentException e) {
-                        io.print("Invalid state. Please try again.");
-                    }
-                }
-
-                String productType = null;
-                while (productType == null) {
-                    try {
-                        productType = service.validateProductType(io.readString("Enter Product Type: "));
-                    } catch (IllegalArgumentException e) {
-                        io.print("Invalid product type. Please try again.");
-                    }
-                }
-
-                BigDecimal area = null;
-                while (area == null) {
-                    try {
-                        area = service.validateArea(io.readBigDecimal("Enter Area: "));
-                    } catch (NumberFormatException e) {
-                        io.print("Invalid area. Please try again.");
-                    } catch (IllegalArgumentException e) {
-                        io.print(e.getMessage());
-                    }
-                }
-                Order newOrder = new Order();
-                newOrder.setOrderDate(orderDate);
-                newOrder.setCustomerName(customerName);
-                newOrder.setState(state);
-                newOrder.setProductType(productType);
-                newOrder.setArea(area);
-
+                Order newOrder = view.getNewOrderInfo(products);
                 service.addOrder(newOrder);
 
                 if (view.displayOrderSummaryAndIfOrdered(newOrder)) {
                     view.displayCreateSuccessBanner();
                 }
+
                 validOrder = true;
-            } catch (DataValidationException e) {
-                io.print("Error: " + e.getMessage());
+
+            } catch (DataValidationException | IllegalArgumentException e) {
+                view.displayErrorMessage("Error: " + e.getMessage());
             }
         }
 
     }
+
+//    private void displayProducts() {
+//        List<Product> products = productDao.readProducts();
+//        view.displayProductList(products);
+//    }
 
     private void displayOrders() {
 

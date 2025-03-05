@@ -1,8 +1,11 @@
 package ui;
 
 import dto.Order;
+import dto.Product;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class FlooringView {
@@ -39,19 +42,22 @@ public class FlooringView {
     }
 
 
-    public Order getNewOrderInfo() {
-        String customerName = getCustomerName();
-        String state = getState();
-        String productType = getProductType();
-        String areaString = getArea();
-        String orderDateString = getOrderDate().toString();
+    public Order getNewOrderInfo(List<Product> products) {
+
+        String orderDateString = io.readString("Enter the order date:");
+        LocalDate orderDate = LocalDate.parse(orderDateString);
+        String customerName = io.readString("Enter customer name:");
+        String state = io.readString("Enter customer state abbreviation:");
+        displayProductList(products);
+        String productType = io.readString("Please Select a Product from the list above: ");
+        String areaString = io.readString("Enter the area:");
 
         Order order = new Order();
+        order.setOrderDate(orderDate);
         order.setCustomerName(customerName);
         order.setState(state);
         order.setProductType(productType);
         order.setArea(new BigDecimal(areaString));
-        order.setOrderDate(LocalDate.parse(orderDateString));
 
         return order;
     }
@@ -68,8 +74,13 @@ public class FlooringView {
         return userInput.equalsIgnoreCase("yes");
     }
 
-    public LocalDate getOrderDate() {
-        return LocalDate.parse(io.readString("Enter the order date (MM/dd/yyyy):"));
+    public void displayProductList(List<Product> products) {
+        for (Product product : products) {
+            io.print("Product Type: " + product.getProductType());
+            io.print("Cost per Square Foot: " + product.getCostPerSquareFoot());
+            io.print("Labor Cost per Square Foot" + product.getLaborCostPerSquareFoot());
+            io.print("-------------------------------");
+        }
     }
 
     int getOrderNumber() {
@@ -95,24 +106,12 @@ public class FlooringView {
         return userInput.equalsIgnoreCase("yes");
     }
 
-    public String getCustomerName() {
-        return io.readString("Enter customer name:");
-    }
-
-    public String getState() {
-        return io.readString("Enter customer state abbreviation:");
-    }
-
-    public String getProductType() {
-        //print product list extracted from product file
-        return io.readString("Enter the Product Type from the list above:");
-    }
-
-    public String getArea() {
-        return io.readString("Enter the area:");
-    }
 
     public void displayCreateSuccessBanner() {
         io.print("Order successfully placed.");
+    }
+
+    public void displayErrorMessage(String msg) {
+        io.print(msg);
     }
 }

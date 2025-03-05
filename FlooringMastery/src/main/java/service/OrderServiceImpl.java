@@ -22,7 +22,11 @@ public class OrderServiceImpl implements OrderService {
     private TaxDao taxDao = new TaxDaoImpl();
     private UserIO io = new UserIOImpl();
 
-
+    public OrderServiceImpl(OrderDao orderDao, ProductDao productDao, TaxDao taxDao) {
+        this.orderDao = orderDao;
+        this.productDao = productDao;
+        this.taxDao = taxDao;
+    }
 
     @Override
     public int generateOrderNumber() {
@@ -37,15 +41,72 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void addOrder(Order order) {
-        if (validateOrder(order)) {
-            order.setOrderNumber(generateOrderNumber());
-            order = calculateOrderCost(order);
-            orderDao.addOrder(order);
-        } else {
-            throw new DataValidationException("Order data is invalid.");
+        validateOrder(order);
+//        order.setOrderNumber(generateOrderNumber());
+//        order = calculateOrderCost(order);
+        orderDao.addOrder(order);
+    }
+
+    @Override
+    public void validateOrder(Order order) {
+        validateDate((order.getOrderDate().toString()));
+        validateName(order.getCustomerName());
+        validateState(order.getState());
+        validateProductType(order.getProductType());
+        validateArea(order.getArea());
+    }
+
+    @Override
+    public LocalDate validateDate(String date) {
+        try {
+            LocalDate orderDate = LocalDate.parse(date);
+            if (orderDate.isBefore(LocalDate.now())) {
+                throw new IllegalArgumentException("Order Date must be in the future.");
+            }
+            return orderDate;
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("Invalid input. Please enter a valid date in MM/dd/yyyy format.");
         }
     }
 
+    @Override
+    public String validateName(String customerName) {
+        if (customerName == null || !customerName.matches("[a-zA-Z0-9., ]+")) {
+            throw new IllegalArgumentException("Invalid Customer Name.");
+        }
+        return customerName;
+    }
+
+    @Override
+    public String validateState(String state) {
+        if (state == null || state.trim().isEmpty()) {
+            throw new IllegalArgumentException("State cannot be empty.");
+        }
+        return state;
+    }
+
+    @Override
+    public String validateProductType(String productType) {
+        List<Product> products = productDao.readProducts();
+        boolean productAvail = products.stream().anyMatch(product -> product.getProductType().equalsIgnoreCase(productType));
+        if (!productAvail) {
+            throw new IllegalArgumentException("We do not have this product available. Please look at our list and enter an available product.2");
+        }
+        return productType;
+    }
+
+    @Override
+    public BigDecimal validateArea(BigDecimal area) {
+        try {
+            if (area == null || area.compareTo(BigDecimal.valueOf(100)) < 0) {
+                throw new IllegalArgumentException("Area must be at least 100 sq ft.");
+            }
+            return area;
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid area. Please enter a valid number.");
+        }
+
+    }
 
     @Override
     public void editOrder() {
@@ -85,10 +146,7 @@ public class OrderServiceImpl implements OrderService {
         return null;
     }
 
-    @Override
-    public boolean validateOrder(Order order) {
-        return true;
-    }
+
 
     @Override
     public Product getProductByType(String type) {
@@ -105,51 +163,7 @@ public class OrderServiceImpl implements OrderService {
         return taxDao.getTaxByState(state);
     }
 
-@Override
-public LocalDate validateDate(String date) {
-    LocalDate orderDate = null;
-    try {
-        orderDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("MM/dd/yyyy"));
-        if (orderDate.isBefore(LocalDate.now())) {
-            throw new IllegalArgumentException("Order Date must be in the future.");
-        }
-        return orderDate;
-    } catch (DateTimeParseException e) {
-        throw new IllegalArgumentException("Invalid input. Please enter a valid date in MM/dd/yyyy format.");
-    }
-}
 
-    @Override
-    public String validateName(String customerName) {
-        if (customerName == null || !customerName.matches("[a-zA-Z0-9., ]+")) {
-            throw new IllegalArgumentException("Invalid Customer Name.");
-        }
-        return customerName;
-    }
-
-    @Override
-    public String validateState(String state) {
-        if (state == null || state.trim().isEmpty()) {
-            throw new IllegalArgumentException("State cannot be empty.");
-        }
-        return state;
-    }
-
-    @Override
-    public String validateProductType(String productType) {
-        if (productType == null || productType.trim().isEmpty()) {
-            throw new IllegalArgumentException("Product Type cannot be empty.");
-        }
-        return productType;
-    }
-
-    @Override
-    public BigDecimal validateArea(BigDecimal area) {
-        if (area == null || area.compareTo(BigDecimal.valueOf(100)) < 0) {
-            throw new IllegalArgumentException("Area must be at least 100 sq ft.");
-        }
-        return area;
-    }
 
 
 }
