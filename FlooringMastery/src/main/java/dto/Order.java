@@ -77,30 +77,6 @@ public class Order {
         this.taxRate = taxRate;
     }
 
-    public BigDecimal getCostPerSquareFoot() {
-        return costPerSquareFoot;
-    }
-
-    public void setCostPerSquareFoot(BigDecimal costPerSquareFoot) {
-        this.costPerSquareFoot = costPerSquareFoot;
-    }
-
-    public BigDecimal getLaborCostPerSquareFoot() {
-        return laborCostPerSquareFoot;
-    }
-
-    public void setLaborCostPerSquareFoot(BigDecimal laborCostPerSquareFoot) {
-        this.laborCostPerSquareFoot = laborCostPerSquareFoot;
-    }
-
-    public BigDecimal getTotalCost() {
-        return total;
-    }
-
-    public void setTotalCost(BigDecimal totalCost) {
-        this.total = totalCost;
-    }
-
     public static int getCounter() {
         return counter;
     }
@@ -139,5 +115,19 @@ public class Order {
 
     public BigDecimal getTotal() {
         return total;
+    }
+
+    @Override
+    public String toString() {
+        return "Order Number: " + orderNumber + "\n" +
+                "Customer Name: " + customerName + "\n" +
+                "State: " + state + "\n" +
+                "Product Type: " + productType + "\n" +
+                "Area: " + area + "\n" +
+                "Material Cost: " + materialCost + "\n" +
+                "Labor Cost: " + laborCost + "\n" +
+                "Tax: " + tax + "\n" +
+                "Total: " + total + "\n" +
+                "Order Date: " + orderDate;
     }
 }

@@ -21,6 +21,7 @@ public class OrderServiceImpl implements OrderService {
     private ProductDao productDao = new ProductDaoImpl();
     private TaxDao taxDao = new TaxDaoImpl();
     private UserIO io = new UserIOImpl();
+    private static int orderCounter = 1;
 
     public OrderServiceImpl(OrderDao orderDao, ProductDao productDao, TaxDao taxDao) {
         this.orderDao = orderDao;
@@ -30,7 +31,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public int generateOrderNumber() {
-        return 0;
+        return orderCounter++;
     }
 
     @Override
@@ -42,8 +43,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void addOrder(Order order) {
         validateOrder(order);
-//        order.setOrderNumber(generateOrderNumber());
-//        order = calculateOrderCost(order);
+        order.setOrderNumber(generateOrderNumber());
+        order = calculateOrderCost(order);
         orderDao.addOrder(order);
     }
 
@@ -79,8 +80,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public String validateState(String state) {
-        if (state == null || state.trim().isEmpty()) {
-            throw new IllegalArgumentException("State cannot be empty.");
+        List<Tax> taxes = taxDao.getAllTaxInfo();
+        boolean stateExists = taxes.stream()
+                .anyMatch(tax -> tax.getStateAbbreviation().equalsIgnoreCase(state));
+        if (!stateExists) {
+            throw new IllegalArgumentException("Sorry, we cannot sell to this state.");
         }
         return state;
     }
@@ -109,11 +113,22 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void editOrder() {
+    public Order getOrder(int orderNumber, LocalDate orderDate) {
+        List<Order> orders = orderDao.getOrders(orderDate);
+        return orders.stream()
+                .filter(order -> order.getOrderNumber() == orderNumber)
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
-    public void removeOrder() {
+    public void removeOrder(int orderNumber, LocalDate orderDate) {
+        List<Order> orders = orderDao.getOrders(orderDate);
+        orders.removeIf(order -> order.getOrderNumber() == orderNumber);
+    }
+
+    @Override
+    public void editOrder() {
     }
 
     @Override
@@ -122,35 +137,56 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order calculateOrderCost(Order order) {
+        BigDecimal materialCost = calculateMaterialCost(order);
+        BigDecimal laborCost = calculateLaborCost(order);
+        BigDecimal tax = calculateTax(order);
+        BigDecimal total = calculateTotal(order);
+
+        order.setMaterialCost(materialCost);
+        order.setLaborCost(laborCost);
+        order.setTax(tax);
+        order.setTotal(total);
+
         return order;
     }
 
     @Override
     public BigDecimal calculateMaterialCost(Order order) {
-        return null;
+        Product product = getProductByType(order.getProductType());
+        return product.getCostPerSquareFoot().multiply(order.getArea()).setScale(2, RoundingMode.HALF_UP);
     }
 
 
     @Override
     public BigDecimal calculateLaborCost(Order order) {
-        return null;
+        Product product = getProductByType(order.getProductType());
+        return product.getLaborCostPerSquareFoot().multiply(order.getArea()).setScale(2, RoundingMode.HALF_UP);
     }
 
     @Override
     public BigDecimal calculateTax(Order order) {
-        return null;
+        BigDecimal materialCost = calculateMaterialCost(order);
+        BigDecimal laborCost = calculateLaborCost(order);
+        Tax tax = getTaxByState(order.getState());
+        BigDecimal subtotal = materialCost.add(laborCost);
+        return subtotal.multiply(tax.getTaxRate().divide(BigDecimal.valueOf(100))).setScale(2, RoundingMode.HALF_UP);
     }
 
     @Override
     public BigDecimal calculateTotal(Order order) {
-        return null;
+        BigDecimal materialCost = calculateMaterialCost(order);
+        BigDecimal laborCost = calculateLaborCost(order);
+        BigDecimal tax = calculateTax(order);
+        return materialCost.add(laborCost).add(tax).setScale(2, RoundingMode.HALF_UP);
     }
-
-
 
     @Override
     public Product getProductByType(String type) {
-        return productDao.getProduct(type);
+        Product product = productDao.getProduct(type);
+        if (product == null) {
+            throw new IllegalArgumentException("Product type not found: " + type);
+        }
+        return product;
     }
 
     @Override

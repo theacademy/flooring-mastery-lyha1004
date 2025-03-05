@@ -35,7 +35,7 @@ public class FlooringController {
 
             switch (menuSelection) {
                 case 1:
-                    io.print("Display");
+                    displayOrders();
                     break;
                 case 2:
                     createOrder();
@@ -44,7 +44,7 @@ public class FlooringController {
                     io.print("Edit");
                     break;
                 case 4:
-                    io.print("Remove");
+                    removeOrder();
                     break;
                 case 5:
                     io.print("Export");
@@ -71,10 +71,12 @@ public class FlooringController {
                 List<Product> products = productDao.readProducts();
 
                 Order newOrder = view.getNewOrderInfo(products);
-                service.addOrder(newOrder);
 
                 if (view.displayOrderSummaryAndIfOrdered(newOrder)) {
+                    service.addOrder(newOrder);
                     view.displayCreateSuccessBanner();
+                } else {
+                    view.displayOrderNotPlacedBanner();
                 }
 
                 validOrder = true;
@@ -86,13 +88,16 @@ public class FlooringController {
 
     }
 
-//    private void displayProducts() {
-//        List<Product> products = productDao.readProducts();
-//        view.displayProductList(products);
-//    }
 
     private void displayOrders() {
+        LocalDate orderDate = view.getDateofOrderDisplay();
+        List<Order> orders = service.getOrders(orderDate);
 
+        if (orders.isEmpty()) {
+            view.displayNoOrdersExist();
+        } else {
+            view.displayOrdersForDate(orders);
+        }
     }
 
     private void editOrder() {
@@ -100,7 +105,21 @@ public class FlooringController {
     }
 
     private void removeOrder() {
+        LocalDate orderDate = view.getDateofOrderDisplay();
+        int orderNumber = view.getOrderNumber();
+        Order order = service.getOrder(orderNumber, orderDate);
 
+        if(order == null) {
+            view.displayOrderDoesNotExist();
+        } else {
+            view.displayOrderInfo(order);
+            if (view.getIfRemoveOrder()) {
+                service.removeOrder(orderNumber, orderDate);
+                view.displayOrderRemovedBanner();
+            } else {
+                view.displayOrderNotRemoved();
+            }
+        }
     }
 
     private void exportData() {

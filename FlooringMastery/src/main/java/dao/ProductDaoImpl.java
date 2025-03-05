@@ -54,7 +54,6 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Product getProduct(String productType) {
-        // Implementation here
-        return null;
+        return products.get(productType);
     }
 }

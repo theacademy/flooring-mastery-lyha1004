@@ -65,11 +65,7 @@ public class FlooringView {
 
 
     public boolean displayOrderSummaryAndIfOrdered(Order order) {
-        io.print("Order Date: " + order.getOrderDate().toString());
-        io.print("Customer Name: " + order.getCustomerName());
-        io.print("State: " + order.getState());
-        io.print("Product Type: " + order.getProductType());
-        io.print("Area: " + order.getArea().toString());
+        io.print(order.toString());
         String userInput = io.readString("Do you want to place this order? (yes/no):");
         return userInput.equalsIgnoreCase("yes");
     }
@@ -83,7 +79,7 @@ public class FlooringView {
         }
     }
 
-    int getOrderNumber() {
+    public int getOrderNumber() {
         return Integer.parseInt(io.readString("Enter the order number:"));
     }
 
@@ -113,5 +109,18 @@ public class FlooringView {
 
     public void displayErrorMessage(String msg) {
         io.print(msg);
+    }
+
+
+    public void displayOrderNotPlacedBanner() {
+        io.print("Order not made.");
+    }
+
+    public void displayOrderRemovedBanner() {
+        io.print("Order has been removed.");
+    }
+
+    public void displayOrderNotRemoved() {
+        io.print("Order will NOT be removed.");
     }
 }

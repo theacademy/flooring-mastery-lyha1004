@@ -14,7 +14,7 @@ public interface OrderService {
     List<Order> getOrders(LocalDate date);
     void addOrder(Order order);
     void editOrder();
-    void removeOrder();
+    void removeOrder(int orderNumber, LocalDate orderDate);
     void exportData();
     Order calculateOrderCost(Order order);
     BigDecimal calculateMaterialCost(Order order);
@@ -32,4 +32,7 @@ public interface OrderService {
     String validateState(String state);
     String validateProductType(String productType);
     BigDecimal validateArea(BigDecimal area);
+
+    Order getOrder(int orderNumber, LocalDate orderDate);
+
 }
