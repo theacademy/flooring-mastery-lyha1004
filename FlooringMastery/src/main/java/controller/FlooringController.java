@@ -113,11 +113,24 @@ public class FlooringController {
         } else {
             view.displayOrderInfo(existingOrder);
             Order updatedOrder = view.getUpdatedOrderInfo(existingOrder, products);
-            if (!existingOrder.equals(updatedOrder)) {
-                updatedOrder = service.calculateOrderCost(updatedOrder);
+
+            if (!updatedOrder.getCustomerName().isEmpty()) {
+                existingOrder.setCustomerName(updatedOrder.getCustomerName());
             }
-            if (view.displayUpdatedOrderAndIfSaved(updatedOrder)) {
-                service.editOrder(updatedOrder);
+            if (!updatedOrder.getState().isEmpty()) {
+                existingOrder.setState(updatedOrder.getState());
+            }
+            if (!updatedOrder.getProductType().isEmpty()) {
+                existingOrder.setProductType(updatedOrder.getProductType());
+            }
+            if (updatedOrder.getArea() != null) {
+                existingOrder.setArea(updatedOrder.getArea());
+            }
+
+            existingOrder = service.calculateOrderCost(existingOrder);
+
+            if (view.displayUpdatedOrderAndIfSaved(existingOrder)) {
+                service.editOrder(existingOrder);
                 view.displayEditSuccessBanner();
             } else {
                 view.displayOrderNotEdited();

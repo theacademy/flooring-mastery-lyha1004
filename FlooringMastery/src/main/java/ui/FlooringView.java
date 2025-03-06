@@ -121,9 +121,9 @@ public class FlooringView {
     }
 
     public Order getUpdatedOrderInfo(Order existingOrder, List<Product> products) {
-        io.print("Editing Order: " + existingOrder.getOrderNumber());
         String customerName = io.readString("Enter customer name:");
         String state = io.readString("Enter customer state abbreviation:");
+
         displayProductList(products);
         String productType = io.readString("Please Select a Product from the list above: ");
         String areaString = io.readString("Enter the area:");
@@ -140,6 +140,7 @@ public class FlooringView {
         if (!areaString.isEmpty()) {
             existingOrder.setArea(new BigDecimal(areaString));
         }
+
 
         return existingOrder;
     }
