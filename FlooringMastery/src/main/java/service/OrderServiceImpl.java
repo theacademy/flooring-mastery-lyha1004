@@ -130,6 +130,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public Order updateOrder(Order existingOrder, Order updatedOrder) {
+        existingOrder.updateFields(updatedOrder);
+        return calculateOrderCost(existingOrder);
+    }
+
+    @Override
     public void editOrder(Order order) {
         List<Order> orders = orderDao.getOrders(order.getOrderDate());
         orders.removeIf(o -> o.getOrderNumber() == order.getOrderNumber());

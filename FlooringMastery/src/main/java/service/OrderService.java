@@ -13,8 +13,10 @@ public interface OrderService {
     int generateOrderNumber();
     List<Order> getOrders(LocalDate date);
     void addOrder(Order order);
-    void editOrder(Order updatedOrder);
     void removeOrder(int orderNumber, LocalDate orderDate);
+    void editOrder(Order existingOrder);
+    Order updateOrder(Order existingOrder, Order updatedOrder);
+
     void exportData();
     Order calculateOrderCost(Order order);
     BigDecimal calculateMaterialCost(Order order);

@@ -114,20 +114,7 @@ public class FlooringController {
             view.displayOrderInfo(existingOrder);
             Order updatedOrder = view.getUpdatedOrderInfo(existingOrder, products);
 
-            if (!updatedOrder.getCustomerName().isEmpty()) {
-                existingOrder.setCustomerName(updatedOrder.getCustomerName());
-            }
-            if (!updatedOrder.getState().isEmpty()) {
-                existingOrder.setState(updatedOrder.getState());
-            }
-            if (!updatedOrder.getProductType().isEmpty()) {
-                existingOrder.setProductType(updatedOrder.getProductType());
-            }
-            if (updatedOrder.getArea() != null) {
-                existingOrder.setArea(updatedOrder.getArea());
-            }
-
-            existingOrder = service.calculateOrderCost(existingOrder);
+            existingOrder = service.updateOrder(existingOrder, updatedOrder);
 
             if (view.displayUpdatedOrderAndIfSaved(existingOrder)) {
                 service.editOrder(existingOrder);
