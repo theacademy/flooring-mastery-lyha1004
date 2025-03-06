@@ -23,8 +23,9 @@ public class FlooringView {
         io.print("2. Add an Order");
         io.print("3. Edit an Order");
         io.print("4. Remove an Order");
-        io.print("5. Export All Data");
-        io.print("6. Quit");
+        io.print("5. Export Orders");
+        io.print("6. Export All Data");
+        io.print("7. Quit");
 
         String userInput = io.readString("Enter a selection above:");
         return Integer.parseInt(userInput);
@@ -38,7 +39,6 @@ public class FlooringView {
         io.print("OrderNumber,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total");
         for (Order order : orders) {
             io.print(order.toString());
-            io.print(order.toStringDate());
         }
     }
 
@@ -51,7 +51,7 @@ public class FlooringView {
     }
 
     public String getOrderDateString() {
-        return io.readString("Enter the order date:");
+        return io.readString("Enter the order date (MM-dd-yyyy):");
     }
 
     public String getState() {

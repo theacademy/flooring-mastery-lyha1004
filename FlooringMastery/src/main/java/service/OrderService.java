@@ -19,6 +19,8 @@ public interface OrderService {
     Order updateOrder(Order existingOrder, Order updatedOrder);
     void exportData(LocalDate date);
 
+    void exportAllData();
+
     Product getProductByType(String type);
     List<Product> getAllProducts();
     Tax getStateTax(String state);

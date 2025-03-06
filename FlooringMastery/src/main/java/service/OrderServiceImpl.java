@@ -16,6 +16,7 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrderServiceImpl implements OrderService {
@@ -70,7 +71,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void previewOrder(Order order) {
-        validateOrder(order);
         order.setOrderNumber(generateOrderNumber());
         order = calculateOrderCost(order);
 
@@ -96,6 +96,23 @@ public class OrderServiceImpl implements OrderService {
             for (Order order : orders) {
                 String marshalledOrder = orderDao.marshallOrder(order);
                 out.println(marshalledOrder);
+            }
+            io.print("Orders successfully exported to " + fileName);
+        } catch (IOException e) {
+            io.print("Error exporting orders: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void exportAllData() {
+        List<Order> activeOrders = orderDao.getAllOrders();
+
+        String fileName = "DataExport.txt";
+        try (PrintWriter out = new PrintWriter(new FileWriter(fileName))) {
+            out.println("OrderNumber,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total,OrderDate");
+            for (Order order : activeOrders) {
+                String marshalledOrder = orderDao.marshallOrder(order);
+                out.println(marshalledOrder + "," + orderDao.marshallDate(order));
             }
             io.print("Orders successfully exported to " + fileName);
         } catch (IOException e) {
@@ -133,14 +150,16 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public LocalDate validateDate(String date) {
-        try {
-            LocalDate orderDate = LocalDate.parse(date);
-            if (orderDate.isBefore(LocalDate.now())) {
-                throw new DataValidationException("Order Date must be in the future.");
+        while (true) {
+            try {
+                LocalDate orderDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("MM-dd-yyyy"));
+                if (orderDate.isBefore(LocalDate.now())) {
+                    throw new DataValidationException("Order Date must be in the future.");
+                }
+                return orderDate;
+            } catch (DateTimeParseException e) {
+                throw new DataValidationException("Invalid input. Please enter a valid date in MM-dd-yyyy format.");
             }
-            return orderDate;
-        } catch (DateTimeParseException e) {
-            throw new DataValidationException("Invalid input. Please enter a valid date in MM/dd/yyyy format.");
         }
     }
 

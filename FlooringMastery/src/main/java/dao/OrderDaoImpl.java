@@ -22,6 +22,15 @@ public class OrderDaoImpl implements OrderDao{
     }
 
     @Override
+    public List<Order> getAllOrders() {
+        List<Order> allOders = new ArrayList<>();
+        for (List<Order> orderList : orders.values()) {
+            allOders.addAll(orderList);
+        }
+        return allOders;
+    }
+
+    @Override
     public void addOrder(Order order) {
         List<Order> ordersForDate = orders.get(order.getOrderDate());
         if (ordersForDate == null) {
@@ -50,4 +59,8 @@ public class OrderDaoImpl implements OrderDao{
         return order.toString();
     }
 
+    @Override
+    public String marshallDate(Order order) {
+        return order.toStringDate();
+    }
 }

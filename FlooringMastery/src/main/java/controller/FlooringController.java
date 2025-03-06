@@ -57,6 +57,9 @@ public class FlooringController {
                     exportData();
                     break;
                 case 6:
+                    exportAllData();
+                    break;
+                case 7:
                     keepGoing = false;
                     break;
                 default:
@@ -77,16 +80,17 @@ public class FlooringController {
                 List<Product> products = productDao.readProducts();
                 Order newOrder = new Order();
 
-                do {
+                while (true) {
                     try {
                         String orderDateString = view.getOrderDateString();
+                        service.validateDate(orderDateString);
                         LocalDate orderDate = LocalDate.parse(orderDateString, DateTimeFormatter.ofPattern("MM-dd-yyyy"));
                         newOrder.setOrderDate(orderDate);
                         break;
-                    } catch (DateTimeParseException e) {
+                    } catch (DataValidationException e) {
                         view.displayErrorMessage("Invalid Date Format: " + e.getMessage());
                     }
-                } while (true);
+                }
 
                 do {
                     try {
@@ -214,5 +218,9 @@ public class FlooringController {
         view.displayExportSuccessBanner();
     }
 
+    private void exportAllData() {
+        service.exportAllData();
+        view.displayExportSuccessBanner();
+    }
 
 }
