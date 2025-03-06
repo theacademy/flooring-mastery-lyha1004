@@ -4,6 +4,7 @@ import dao.ProductDao;
 import dto.Product;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,6 +29,6 @@ public class ProductDaoStubImpl implements ProductDao {
 
     @Override
     public List<Product> readProducts() {
-        return products;
+        return new ArrayList<>(products);
     }
 }

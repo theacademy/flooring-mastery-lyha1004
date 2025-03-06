@@ -24,7 +24,7 @@ public class OrderServiceImpl implements OrderService {
     private ProductDao productDao = new ProductDaoImpl();
     private TaxDao taxDao = new TaxDaoImpl();
     private UserIO io = new UserIOImpl();
-    private static int orderCounter = 1;
+    private static int orderCounter = 0;
 
     public OrderServiceImpl(OrderDao orderDao, ProductDao productDao, TaxDao taxDao) {
         this.orderDao = orderDao;
@@ -64,16 +64,31 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void editOrder(Order order) {
         List<Order> orders = orderDao.getOrders(order.getOrderDate());
-        orders.removeIf(o -> o.getOrderNumber() == order.getOrderNumber());
+        boolean orderFound = false;
+
+        for (Order o : orders) {
+            if (o.getOrderNumber() == order.getOrderNumber()) {
+                orders.remove(o);
+                orderFound = true;
+                break;
+            }
+        }
+
+        if (!orderFound) {
+            throw new OrderNotFoundException("Order with order number " + order.getOrderNumber() + " not found.");
+        }
+
         orders.add(order);
+
         orderDao.editOrder(order.getOrderDate(), orders);
     }
 
+
     @Override
-    public void previewOrder(Order order) {
+    public Order previewOrder(Order order) {
         order.setOrderNumber(generateOrderNumber());
         order = calculateOrderCost(order);
-
+        return order;
     }
 
     @Override
@@ -140,15 +155,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void validateOrder(Order order) {
-        validateDate((order.getOrderDate().toString()));
-        validateName(order.getCustomerName());
-        validateState(order.getState());
-        validateProductType(order.getProductType());
-        validateArea(order.getArea());
-    }
-
-    @Override
     public LocalDate validateDate(String date) {
         while (true) {
             try {
@@ -162,6 +168,7 @@ public class OrderServiceImpl implements OrderService {
             }
         }
     }
+
 
     @Override
     public String validateName(String customerName) {
@@ -187,7 +194,7 @@ public class OrderServiceImpl implements OrderService {
         List<Product> products = productDao.readProducts();
         boolean productAvail = products.stream().anyMatch(product -> product.getProductType().equalsIgnoreCase(productType));
         if (!productAvail) {
-            throw new DataValidationException("We do not have this product available. Please look at our list and enter an available product.2");
+            throw new DataValidationException("We do not have this product available. Please look at our list and enter an available product.");
         }
         return productType;
     }

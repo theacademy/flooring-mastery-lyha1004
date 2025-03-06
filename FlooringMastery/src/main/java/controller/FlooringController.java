@@ -142,7 +142,7 @@ public class FlooringController {
                 } while (true);
 
 
-                service.previewOrder(newOrder);
+                newOrder = service.previewOrder(newOrder);
 
                 if (view.displayOrderSummaryAndIfOrdered(newOrder)) {
                     service.addOrder(newOrder);

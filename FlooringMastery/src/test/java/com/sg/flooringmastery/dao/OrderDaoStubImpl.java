@@ -31,6 +31,11 @@ public class OrderDaoStubImpl implements OrderDao {
     }
 
     @Override
+    public List<Order> getAllOrders() {
+        return orders;
+    }
+
+    @Override
     public void addOrder(Order order) {
         orders.add(order);
     }
@@ -43,6 +48,11 @@ public class OrderDaoStubImpl implements OrderDao {
     @Override
     public String marshallOrder(Order order) {
         return order.toString();
+    }
+
+    @Override
+    public String marshallDate(Order order) {
+        return order.toStringDate();
     }
 
     @Override

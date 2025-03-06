@@ -15,7 +15,7 @@ public interface OrderService {
     void addOrder(Order order);
     void removeOrder(int orderNumber, LocalDate orderDate);
     void editOrder(Order existingOrder);
-    void previewOrder(Order order);
+    Order previewOrder(Order order);
     Order updateOrder(Order existingOrder, Order updatedOrder);
     void exportData(LocalDate date);
 
@@ -30,7 +30,6 @@ public interface OrderService {
     BigDecimal calculateTax(Order order);
     BigDecimal calculateTotal(Order order);
 
-    void validateOrder(Order order);
     LocalDate validateDate(String date);
     String validateName(String customerName);
     String validateState(String state);
