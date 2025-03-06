@@ -17,7 +17,7 @@ public class Order {
     private BigDecimal laborCost;
     private BigDecimal tax;
     private BigDecimal total;
-    private static int counter;
+    private static int counter = 1;
 
 
     public int getOrderNumber() {

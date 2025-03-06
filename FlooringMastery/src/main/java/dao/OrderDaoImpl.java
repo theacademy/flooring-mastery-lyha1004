@@ -45,8 +45,8 @@ public class OrderDaoImpl implements OrderDao{
     }
 
     @Override
-    public void editOrder(Order order) {
-
+    public void editOrder(LocalDate date, List<Order> order) {
+        orders.put(date, order);
     }
 
     @Override
@@ -56,6 +56,11 @@ public class OrderDaoImpl implements OrderDao{
 
     @Override
     public void exportAllData() {
+
+    }
+
+    @Override
+    public void previewOrder(Order order) {
 
     }
 

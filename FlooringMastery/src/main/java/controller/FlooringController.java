@@ -41,7 +41,7 @@ public class FlooringController {
                     createOrder();
                     break;
                 case 3:
-                    io.print("Edit");
+                    editOrder();
                     break;
                 case 4:
                     removeOrder();
@@ -72,6 +72,8 @@ public class FlooringController {
 
                 Order newOrder = view.getNewOrderInfo(products);
 
+                service.previewOrder(newOrder);
+
                 if (view.displayOrderSummaryAndIfOrdered(newOrder)) {
                     service.addOrder(newOrder);
                     view.displayCreateSuccessBanner();
@@ -101,7 +103,26 @@ public class FlooringController {
     }
 
     private void editOrder() {
+        LocalDate orderDate = view.getDateofOrderDisplay();
+        int orderNumber = view.getOrderNumber();
+        Order existingOrder = service.getOrder(orderNumber, orderDate);
+        List<Product> products = productDao.readProducts();
 
+        if (existingOrder == null) {
+            view.displayOrderDoesNotExist();
+        } else {
+            view.displayOrderInfo(existingOrder);
+            Order updatedOrder = view.getUpdatedOrderInfo(existingOrder, products);
+            if (!existingOrder.equals(updatedOrder)) {
+                updatedOrder = service.calculateOrderCost(updatedOrder);
+            }
+            if (view.displayUpdatedOrderAndIfSaved(updatedOrder)) {
+                service.editOrder(updatedOrder);
+                view.displayEditSuccessBanner();
+            } else {
+                view.displayOrderNotEdited();
+            }
+        }
     }
 
     private void removeOrder() {

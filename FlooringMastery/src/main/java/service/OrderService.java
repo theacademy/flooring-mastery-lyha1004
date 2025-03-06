@@ -13,7 +13,7 @@ public interface OrderService {
     int generateOrderNumber();
     List<Order> getOrders(LocalDate date);
     void addOrder(Order order);
-    void editOrder();
+    void editOrder(Order updatedOrder);
     void removeOrder(int orderNumber, LocalDate orderDate);
     void exportData();
     Order calculateOrderCost(Order order);
@@ -21,6 +21,9 @@ public interface OrderService {
     BigDecimal calculateLaborCost(Order order);
     BigDecimal calculateTax(Order order);
     BigDecimal calculateTotal(Order order);
+
+    void previewOrder(Order order);
+
     void validateOrder(Order order);
     Product getProductByType(String type);
     List<Product> getAllProducts();

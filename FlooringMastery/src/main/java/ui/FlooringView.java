@@ -62,8 +62,6 @@ public class FlooringView {
         return order;
     }
 
-
-
     public boolean displayOrderSummaryAndIfOrdered(Order order) {
         io.print(order.toString());
         String userInput = io.readString("Do you want to place this order? (yes/no):");
@@ -102,7 +100,6 @@ public class FlooringView {
         return userInput.equalsIgnoreCase("yes");
     }
 
-
     public void displayCreateSuccessBanner() {
         io.print("Order successfully placed.");
     }
@@ -110,7 +107,6 @@ public class FlooringView {
     public void displayErrorMessage(String msg) {
         io.print(msg);
     }
-
 
     public void displayOrderNotPlacedBanner() {
         io.print("Order not made.");
@@ -122,5 +118,37 @@ public class FlooringView {
 
     public void displayOrderNotRemoved() {
         io.print("Order will NOT be removed.");
+    }
+
+    public Order getUpdatedOrderInfo(Order existingOrder, List<Product> products) {
+        io.print("Editing Order: " + existingOrder.getOrderNumber());
+        String customerName = io.readString("Enter customer name:");
+        String state = io.readString("Enter customer state abbreviation:");
+        displayProductList(products);
+        String productType = io.readString("Please Select a Product from the list above: ");
+        String areaString = io.readString("Enter the area:");
+
+        if (!customerName.isEmpty()) {
+            existingOrder.setCustomerName(customerName);
+        }
+        if (!state.isEmpty()) {
+            existingOrder.setState(state);
+        }
+        if (!productType.isEmpty()) {
+            existingOrder.setProductType(productType);
+        }
+        if (!areaString.isEmpty()) {
+            existingOrder.setArea(new BigDecimal(areaString));
+        }
+
+        return existingOrder;
+    }
+
+    public void displayEditSuccessBanner() {
+        io.print("Successfully updated order.");
+    }
+
+    public void displayOrderNotEdited() {
+        io.print("Order not updated.");
     }
 }

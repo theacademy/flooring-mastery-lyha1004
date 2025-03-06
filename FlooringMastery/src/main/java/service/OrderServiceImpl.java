@@ -4,15 +4,12 @@ import dao.*;
 import dto.Order;
 import dto.Product;
 import dto.Tax;
-import org.springframework.cglib.core.Local;
 import ui.UserIO;
 import ui.UserIOImpl;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
@@ -42,10 +39,15 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void addOrder(Order order) {
+        orderDao.addOrder(order);
+    }
+
+    @Override
+    public void previewOrder(Order order) {
         validateOrder(order);
         order.setOrderNumber(generateOrderNumber());
         order = calculateOrderCost(order);
-        orderDao.addOrder(order);
+
     }
 
     @Override
@@ -128,7 +130,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void editOrder() {
+    public void editOrder(Order order) {
+        List<Order> orders = orderDao.getOrders(order.getOrderDate());
+        orders.removeIf(o -> o.getOrderNumber() == order.getOrderNumber());
+        orders.add(order);
+        orderDao.editOrder(order.getOrderDate(), orders);
     }
 
     @Override
@@ -198,6 +204,8 @@ public class OrderServiceImpl implements OrderService {
     public Tax getTaxByState(String state) {
         return taxDao.getTaxByState(state);
     }
+
+
 
 
 
