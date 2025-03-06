@@ -3,7 +3,6 @@ package service;
 import dto.Order;
 import dto.Product;
 import dto.Tax;
-import org.springframework.cglib.core.Local;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -22,8 +21,7 @@ public interface OrderService {
 
     Product getProductByType(String type);
     List<Product> getAllProducts();
-    Tax getTaxByState(String state);
-
+    Tax getStateTax(String state);
     Order calculateOrderCost(Order order);
     BigDecimal calculateMaterialCost(Order order);
     BigDecimal calculateLaborCost(Order order);

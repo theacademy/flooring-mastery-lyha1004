@@ -2,6 +2,7 @@ package dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Order {
     private int orderNumber;
@@ -61,16 +62,16 @@ public class Order {
         this.productType = productType;
     }
 
-    public void setCostPerSquareFoot(BigDecimal costPerSquareFoot) {
-        this.costPerSquareFoot = costPerSquareFoot;
+    public void setCostPerSquareFoot(String costPerSquareFoot) {
+        this.costPerSquareFoot = new BigDecimal(costPerSquareFoot);
     }
 
     public BigDecimal getCostPerSquareFoot() {
         return costPerSquareFoot;
     }
 
-    public void setLaborCostPerSquareFoot(BigDecimal laborCostPerSquareFoot) {
-        this.laborCostPerSquareFoot = laborCostPerSquareFoot;
+    public void setLaborCostPerSquareFoot(String laborCostPerSquareFoot) {
+        this.laborCostPerSquareFoot = new BigDecimal(laborCostPerSquareFoot);
     }
 
     public BigDecimal getLaborCostPerSquareFoot() {
@@ -153,8 +154,11 @@ public class Order {
                 materialCost + "," +
                 laborCost + "," +
                 tax + "," +
-                total + "," +
-                orderDate;
+                total;
+    }
+
+    public String toStringDate() {
+        return orderDate.format(DateTimeFormatter.ofPattern("MM-dd-yyyy"));
     }
 
 }

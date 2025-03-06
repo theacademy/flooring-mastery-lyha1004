@@ -79,8 +79,8 @@ public class OrderDaoImplTest {
         order.setCustomerName("John Doe");
         order.setState("CA");
         order.setTaxRate(new BigDecimal("7.25"));
-        order.setCostPerSquareFoot(new BigDecimal("5.15"));
-        order.setLaborCostPerSquareFoot(new BigDecimal("4.75"));
+        order.setCostPerSquareFoot("5.15");
+        order.setLaborCostPerSquareFoot("4.75");
         order.setProductType("Wood");
         order.setArea(new BigDecimal("100.00"));
         order.setMaterialCost(new BigDecimal("515.00"));
@@ -88,7 +88,7 @@ public class OrderDaoImplTest {
         order.setTax(new BigDecimal("71.25"));
         order.setTotal(new BigDecimal("1061.25"));
 
-        String expected = "1,John Doe,CA,7.25,Wood,100.00,5.15,4.75,515.00,475.00,71.25,1061.25,2023-10-01";
+        String expected = "1,John Doe,CA,7.25,Wood,100.00,5.15,4.75,515.00,475.00,71.25,1061.25";
         String result = orderDao.marshallOrder(order);
 
         assertEquals(expected, result);

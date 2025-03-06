@@ -4,6 +4,8 @@ package controller;
 import dao.*;
 import dto.Order;
 import dto.Product;
+import dto.Tax;
+import org.springframework.cglib.core.Local;
 import service.DataValidationException;
 import service.OrderService;
 import service.OrderServiceImpl;
@@ -11,7 +13,10 @@ import ui.FlooringView;
 import ui.UserIO;
 import ui.UserIOImpl;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
 public class FlooringController {
@@ -69,10 +74,69 @@ public class FlooringController {
         boolean validOrder = false;
         while (!validOrder) {
             try {
-
                 List<Product> products = productDao.readProducts();
+                Order newOrder = new Order();
 
-                Order newOrder = view.getNewOrderInfo(products);
+                do {
+                    try {
+                        String orderDateString = view.getOrderDateString();
+                        LocalDate orderDate = LocalDate.parse(orderDateString, DateTimeFormatter.ofPattern("MM-dd-yyyy"));
+                        newOrder.setOrderDate(orderDate);
+                        break;
+                    } catch (DateTimeParseException e) {
+                        view.displayErrorMessage("Invalid Date Format: " + e.getMessage());
+                    }
+                } while (true);
+
+                do {
+                    try {
+                        String customerName = view.getCustomerName();
+                        service.validateName(customerName);
+                        newOrder.setCustomerName(customerName);
+                        break;
+                    } catch (DataValidationException e) {
+                        view.displayErrorMessage("Invalid Customer Name: " + e.getMessage());
+                    }
+                } while (true);
+
+                do {
+                    try {
+                        String state = view.getState();
+                        service.validateState(state);
+                        newOrder.setState(state);
+                        Tax tax = service.getStateTax(state);
+                        newOrder.setTaxRate(tax.getTaxRate());
+                        break;
+                    } catch (DataValidationException e) {
+                        view.displayErrorMessage("Invalid State: " + e.getMessage());
+                    }
+                } while (true);
+
+                do {
+                    try {
+                        String productType = view.getProductType(products);
+                        service.validateProductType(productType);
+                        newOrder.setProductType(productType);
+                        Product product = service.getProductByType(productType);
+                        newOrder.setCostPerSquareFoot(product.getCostPerSquareFoot().toString());
+                        newOrder.setLaborCostPerSquareFoot(product.getLaborCostPerSquareFoot().toString());
+                        break;
+                    } catch (DataValidationException e) {
+                        view.displayErrorMessage("Invalid Product Type: " + e.getMessage());
+                    }
+                } while (true);
+
+                do {
+                    try {
+                        BigDecimal area = new BigDecimal(view.getAreaString());
+                        service.validateArea(area);
+                        newOrder.setArea(area);
+                        break;
+                    } catch (DataValidationException e) {
+                        view.displayErrorMessage("Invalid Area: " + e.getMessage());
+                    }
+                } while (true);
+
 
                 service.previewOrder(newOrder);
 
@@ -85,11 +149,10 @@ public class FlooringController {
 
                 validOrder = true;
 
-            } catch (DataValidationException | IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 view.displayErrorMessage("Error: " + e.getMessage());
             }
         }
-
     }
 
 

@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
@@ -89,8 +90,9 @@ public class OrderServiceImpl implements OrderService {
             return;
         }
 
-        String fileName = "Orders_" + date.toString() + ".txt";
+        String fileName = "Orders_" + date.format(DateTimeFormatter.ofPattern("MMddyyyy")) + ".txt";
         try (PrintWriter out = new PrintWriter(new FileWriter(fileName))) {
+            out.println("OrderNumber,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total");
             for (Order order : orders) {
                 String marshalledOrder = orderDao.marshallOrder(order);
                 out.println(marshalledOrder);
@@ -116,7 +118,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Tax getTaxByState(String state) {
+    public Tax getStateTax(String state) {
         return taxDao.getStateTax(state);
     }
 
@@ -220,7 +222,7 @@ public class OrderServiceImpl implements OrderService {
     public BigDecimal calculateTax(Order order) {
         BigDecimal materialCost = calculateMaterialCost(order);
         BigDecimal laborCost = calculateLaborCost(order);
-        Tax tax = getTaxByState(order.getState());
+        Tax tax = getStateTax(order.getState());
         BigDecimal subtotal = materialCost.add(laborCost);
         return subtotal.multiply(tax.getTaxRate().divide(BigDecimal.valueOf(100))).setScale(2, RoundingMode.HALF_UP);
     }

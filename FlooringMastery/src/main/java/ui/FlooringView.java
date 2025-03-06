@@ -31,13 +31,14 @@ public class FlooringView {
     }
 
     public LocalDate getDateofOrderDisplay() {
-        return LocalDate.parse(io.readString("Enter the date (yyyy-MM-dd)"));
+        return LocalDate.parse(io.readString("Enter the date (MM-dd-yyyy)"), DateTimeFormatter.ofPattern("MM-dd-yyyy"));
     }
 
     public void displayOrdersForDate(List<Order> orders) {
         io.print("OrderNumber,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total");
         for (Order order : orders) {
             io.print(order.toString());
+            io.print(order.toStringDate());
         }
     }
 
@@ -45,25 +46,25 @@ public class FlooringView {
         io.print("No orders exist for the given data.");
     }
 
+    public String getCustomerName() {
+        return io.readString("Enter customer name:");
+    }
 
-    public Order getNewOrderInfo(List<Product> products) {
+    public String getOrderDateString() {
+        return io.readString("Enter the order date:");
+    }
 
-        String orderDateString = io.readString("Enter the order date:");
-        LocalDate orderDate = LocalDate.parse(orderDateString);
-        String customerName = io.readString("Enter customer name:");
-        String state = io.readString("Enter customer state abbreviation:");
+    public String getState() {
+        return io.readString("Enter customer state abbreviation:");
+    }
+
+    public String getProductType(List<Product> products) {
         displayProductList(products);
-        String productType = io.readString("Please Select a Product from the list above: ");
-        String areaString = io.readString("Enter the area:");
+        return io.readString("Please Select a Product from the list above: ");
+    }
 
-        Order order = new Order();
-        order.setOrderDate(orderDate);
-        order.setCustomerName(customerName);
-        order.setState(state);
-        order.setProductType(productType);
-        order.setArea(new BigDecimal(areaString));
-
-        return order;
+    public String getAreaString() {
+        return io.readString("Enter the area:");
     }
 
     public boolean displayOrderSummaryAndIfOrdered(Order order) {
@@ -171,4 +172,6 @@ public class FlooringView {
     public void displayUnknown() {
         io.print("Unknown Command. Please select 1-6 based on the menu.");
     }
+
+
 }
