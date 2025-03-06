@@ -1,30 +1,32 @@
 package controller;
 
+
 import dao.*;
 import dto.Order;
 import dto.Product;
-import org.springframework.cglib.core.Local;
 import service.DataValidationException;
-import java.time.format.DateTimeParseException;
 import service.OrderService;
 import service.OrderServiceImpl;
 import ui.FlooringView;
 import ui.UserIO;
 import ui.UserIOImpl;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class FlooringController {
 
-    private FlooringView view = new FlooringView();
+    private UserIO io = new UserIOImpl();
+    private FlooringView view = new FlooringView(io);
     private OrderDao orderDao = new OrderDaoImpl();
     private ProductDao productDao = new ProductDaoImpl();
     private TaxDao taxDao = new TaxDaoImpl();
-    private UserIO io = new UserIOImpl();
     private OrderService service = new OrderServiceImpl(orderDao, productDao, taxDao);
+
+    public FlooringController (OrderService service, FlooringView view) {
+        this.service = service;
+        this.view = view;
+    }
 
     public void run() {
         boolean keepGoing = true;
@@ -38,7 +40,7 @@ public class FlooringController {
                     displayOrders();
                     break;
                 case 2:
-                    createOrder();
+                    addOrder();
                     break;
                 case 3:
                     editOrder();
@@ -47,23 +49,23 @@ public class FlooringController {
                     removeOrder();
                     break;
                 case 5:
-                    io.print("Export");
+                    exportData();
                     break;
                 case 6:
                     keepGoing = false;
                     break;
                 default:
-                    io.print("UNKNOWN COMMAND");
+                    view.displayUnknown();
             }
         }
-        io.print("Thank you for shopping with us.");
+        view.displayQuitMessage();
     }
 
     private int getMenuSelection() {
         return view.printMenuAndGetSelection();
     }
 
-    private void createOrder() {
+    private void addOrder() {
         boolean validOrder = false;
         while (!validOrder) {
             try {
@@ -144,11 +146,10 @@ public class FlooringController {
     }
 
     private void exportData() {
-
+        LocalDate date = view.getDateofOrderDisplay();
+        service.exportData(date);
+        view.displayExportSuccessBanner();
     }
 
-    private void quitMessage() {
-
-    }
 
 }

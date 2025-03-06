@@ -1,9 +1,9 @@
 package dao;
 
 import dto.Tax;
+import service.TaxFileIOException;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
@@ -18,7 +18,7 @@ public class TaxDaoImpl implements TaxDao {
     private Map<String, Tax> taxes = new HashMap<>();
 
     public TaxDaoImpl() {
-        loadTaxInfo();
+        unmarshallStateTax();
     }
 
     @Override
@@ -27,19 +27,12 @@ public class TaxDaoImpl implements TaxDao {
     }
 
     @Override
-    public BigDecimal getStateTax(String state) {
-        // Implementation here
-        return null;
+    public Tax getStateTax(String state) {
+        return taxes.get(state);
     }
 
     @Override
-    public Tax unmarshallStateTax(String stateTaxInfo) {
-        // Implementation here
-        return null;
-    }
-
-    @Override
-    public void loadTaxInfo() {
+    public void unmarshallStateTax() {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(TAX_FILE)))) {
             String line;
             br.readLine();
@@ -60,12 +53,9 @@ public class TaxDaoImpl implements TaxDao {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("Could not load tax data.", e);
+            throw new TaxFileIOException("Could not load tax data.", e);
         }
     }
 
-    @Override
-    public Tax getTaxByState(String state) {
-        return taxes.get(state);
-    }
+
 }

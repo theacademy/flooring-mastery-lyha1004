@@ -12,32 +12,29 @@ import java.util.List;
 public interface OrderService {
     int generateOrderNumber();
     List<Order> getOrders(LocalDate date);
+    Order getOrder(int orderNumber, LocalDate orderDate);
     void addOrder(Order order);
     void removeOrder(int orderNumber, LocalDate orderDate);
     void editOrder(Order existingOrder);
+    void previewOrder(Order order);
     Order updateOrder(Order existingOrder, Order updatedOrder);
+    void exportData(LocalDate date);
 
-    void exportData();
+    Product getProductByType(String type);
+    List<Product> getAllProducts();
+    Tax getTaxByState(String state);
+
     Order calculateOrderCost(Order order);
     BigDecimal calculateMaterialCost(Order order);
     BigDecimal calculateLaborCost(Order order);
     BigDecimal calculateTax(Order order);
     BigDecimal calculateTotal(Order order);
 
-    void previewOrder(Order order);
-
     void validateOrder(Order order);
-    Product getProductByType(String type);
-    List<Product> getAllProducts();
-    Tax getTaxByState(String state);
-
-    //validations
     LocalDate validateDate(String date);
     String validateName(String customerName);
     String validateState(String state);
     String validateProductType(String productType);
     BigDecimal validateArea(BigDecimal area);
-
-    Order getOrder(int orderNumber, LocalDate orderDate);
 
 }

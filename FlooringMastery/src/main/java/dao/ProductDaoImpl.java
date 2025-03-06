@@ -1,6 +1,7 @@
 package dao;
 
 import dto.Product;
+import service.ProductsFileIOException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -43,7 +44,7 @@ public class ProductDaoImpl implements ProductDao {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("Could not load product data.", e);
+            throw new ProductsFileIOException("Could not load product data.", e);
         }
     }
 

@@ -20,6 +20,7 @@ public class Order {
     private static int counter = 1;
 
 
+
     public int getOrderNumber() {
         return orderNumber;
     }
@@ -117,7 +118,6 @@ public class Order {
         return total;
     }
 
-
     public void updateFields(Order updatedOrder) {
         if (!updatedOrder.getCustomerName().isEmpty()) {
             this.customerName = updatedOrder.getCustomerName();
@@ -133,18 +133,9 @@ public class Order {
         }
     }
 
-
     @Override
     public String toString() {
-        return "Order Number: " + orderNumber + "\n" +
-                "Customer Name: " + customerName + "\n" +
-                "State: " + state + "\n" +
-                "Product Type: " + productType + "\n" +
-                "Area: " + area + "\n" +
-                "Material Cost: " + materialCost + "\n" +
-                "Labor Cost: " + laborCost + "\n" +
-                "Tax: " + tax + "\n" +
-                "Total: " + total + "\n" +
-                "Order Date: " + orderDate;
+        return orderNumber +  ", " + customerName + ", " + state + ", " + productType + ", " +  area + ", " + materialCost + ", " + laborCost + ", " + tax + ", " + total + ", " + orderDate;
     }
+
 }

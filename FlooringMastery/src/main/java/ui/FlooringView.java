@@ -13,6 +13,9 @@ public class FlooringView {
 
     private UserIO io = new UserIOImpl();
 
+    public FlooringView(UserIO io) {
+        this.io = io;
+    }
 
     public int printMenuAndGetSelection() {
         io.print("<<Flooring Program>>");
@@ -32,6 +35,7 @@ public class FlooringView {
     }
 
     public void displayOrdersForDate(List<Order> orders) {
+        io.print("OrderNumber,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total");
         for (Order order : orders) {
             io.print(order.toString());
         }
@@ -63,6 +67,7 @@ public class FlooringView {
     }
 
     public boolean displayOrderSummaryAndIfOrdered(Order order) {
+        io.print("OrderNumber,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total");
         io.print(order.toString());
         String userInput = io.readString("Do you want to place this order? (yes/no):");
         return userInput.equalsIgnoreCase("yes");
@@ -86,12 +91,14 @@ public class FlooringView {
     }
 
     public boolean displayUpdatedOrderAndIfSaved(Order order) {
+        io.print("OrderNumber,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total");
         io.print(order.toString());
         String userInput = io.readString("Do you want to save this order? (yes/no):");
         return userInput.equalsIgnoreCase("yes");
     }
 
     public void displayOrderInfo(Order order) {
+        io.print("OrderNumber,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total");
         io.print(order.toString());
     }
 
@@ -151,5 +158,17 @@ public class FlooringView {
 
     public void displayOrderNotEdited() {
         io.print("Order not updated.");
+    }
+
+    public void displayExportSuccessBanner() {
+        io.print("Order successfully exported.");
+    }
+
+    public void displayQuitMessage() {
+        io.print("Thank you for shopping with us.");
+    }
+
+    public void displayUnknown() {
+        io.print("Unknown Command. Please select 1-6 based on the menu.");
     }
 }

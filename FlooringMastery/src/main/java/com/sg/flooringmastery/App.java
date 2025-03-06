@@ -1,10 +1,15 @@
 package com.sg.flooringmastery;
 
 import controller.FlooringController;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class App {
     public static void main(String[] args) {
-        FlooringController controller = new FlooringController();
+        ApplicationContext ctx =
+                new ClassPathXmlApplicationContext("applicationContext.xml");
+        FlooringController controller =
+                ctx.getBean("controller", FlooringController.class);
         controller.run();
     }
 }
