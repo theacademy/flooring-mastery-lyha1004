@@ -41,6 +41,11 @@ public class OrderDaoStubImpl implements OrderDao {
     }
 
     @Override
+    public String marshallOrder(Order order) {
+        return order.toString();
+    }
+
+    @Override
     public void editOrder(LocalDate orderDate, List<Order> updatedOrders) {
         orders = updatedOrders;
     }

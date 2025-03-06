@@ -11,4 +11,5 @@ public interface OrderDao {
     void addOrder(Order order);
     void editOrder(LocalDate date, List<Order> order);
     void removeOrder(int orderNumber, LocalDate date);
+    String marshallOrder(Order order);
 }

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public class OrderDaoImpl implements OrderDao{
-
+    private static final String DELIMITER = ",";
     private Map<LocalDate, List<Order>> orders = new HashMap<>();
 
     @Override
@@ -45,5 +45,9 @@ public class OrderDaoImpl implements OrderDao{
         }
     }
 
+    @Override
+    public String marshallOrder(Order order) {
+        return order.toString();
+    }
 
 }

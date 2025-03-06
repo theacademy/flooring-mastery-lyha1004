@@ -2,10 +2,13 @@ package com.sg.flooringmastery.dao;
 
 import dao.OrderDao;
 import dao.OrderDaoImpl;
+import dao.ProductDaoImpl;
 import dto.Order;
+import dto.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -66,5 +69,28 @@ public class OrderDaoImplTest {
         orderDao.removeOrder(1, date);
         orders = orderDao.getOrders(date);
         assertTrue(orders.isEmpty());
+    }
+
+    @Test
+    public void testMarshallOrder() {
+        Order order = new Order();
+        order.setOrderNumber(1);
+        order.setOrderDate(LocalDate.of(2023, 10, 1));
+        order.setCustomerName("John Doe");
+        order.setState("CA");
+        order.setTaxRate(new BigDecimal("7.25"));
+        order.setCostPerSquareFoot(new BigDecimal("5.15"));
+        order.setLaborCostPerSquareFoot(new BigDecimal("4.75"));
+        order.setProductType("Wood");
+        order.setArea(new BigDecimal("100.00"));
+        order.setMaterialCost(new BigDecimal("515.00"));
+        order.setLaborCost(new BigDecimal("475.00"));
+        order.setTax(new BigDecimal("71.25"));
+        order.setTotal(new BigDecimal("1061.25"));
+
+        String expected = "1,John Doe,CA,7.25,Wood,100.00,5.15,4.75,515.00,475.00,71.25,1061.25,2023-10-01";
+        String result = orderDao.marshallOrder(order);
+
+        assertEquals(expected, result);
     }
 }

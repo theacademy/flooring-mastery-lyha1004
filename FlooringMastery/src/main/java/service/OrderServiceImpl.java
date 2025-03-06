@@ -84,15 +84,20 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void exportData(LocalDate date) {
         List<Order> orders = orderDao.getOrders(date);
-        String fileName = "Orders_" + date + ".txt";
+        if (orders.isEmpty()) {
+            io.print("No orders found for the specified date.");
+            return;
+        }
 
+        String fileName = "Orders_" + date.toString() + ".txt";
         try (PrintWriter out = new PrintWriter(new FileWriter(fileName))) {
-            out.println("OrderNumber,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total");
             for (Order order : orders) {
-               out.println(order.toString());
+                String marshalledOrder = orderDao.marshallOrder(order);
+                out.println(marshalledOrder);
             }
+            io.print("Orders successfully exported to " + fileName);
         } catch (IOException e) {
-            throw new FlooringPersistenceException("Error exporting data to file: " + fileName, e);
+            io.print("Error exporting orders: " + e.getMessage());
         }
     }
 
