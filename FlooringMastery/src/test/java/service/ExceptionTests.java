@@ -1,11 +1,10 @@
 package service;
 
+import dao.ProductsFileIOException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import service.FlooringPersistenceException;
-import service.TaxFileIOException;
-import service.ProductsFileIOException;
+import dao.TaxFileIOException;
 
 class ExceptionTest {
 

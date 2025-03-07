@@ -1,7 +1,6 @@
 package dao;
 
 import dto.Product;
-import service.ProductsFileIOException;
 
 import java.io.BufferedReader;
 import java.io.IOException;

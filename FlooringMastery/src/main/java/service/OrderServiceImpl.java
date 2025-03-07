@@ -87,7 +87,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void exportData(LocalDate date) {
+    public void exportData(LocalDate date) throws FlooringPersistenceException{
         List<Order> orders = orderDao.getOrders(date);
         if (orders.isEmpty()) {
             io.print("No orders found for the specified date.");
@@ -103,12 +103,12 @@ public class OrderServiceImpl implements OrderService {
             }
             io.print("Orders successfully exported to " + fileName);
         } catch (IOException e) {
-            io.print("Error exporting orders: " + e.getMessage());
+            throw new FlooringPersistenceException("Error exporting orders: ", e);
         }
     }
 
     @Override
-    public void exportAllData() {
+    public void exportAllData() throws FlooringPersistenceException{
         List<Order> activeOrders = orderDao.getAllOrders();
 
         String fileName = "DataExport.txt";
@@ -120,7 +120,7 @@ public class OrderServiceImpl implements OrderService {
             }
             io.print("Orders successfully exported to " + fileName);
         } catch (IOException e) {
-            io.print("Error exporting orders: " + e.getMessage());
+            throw new FlooringPersistenceException("Error exporting orders: ", e);
         }
     }
 

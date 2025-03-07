@@ -7,7 +7,7 @@ import java.util.List;
 public interface ProductDao {
 
     void loadProducts();
-    List<Product> readProducts();
+    List<Product> readProducts() throws ProductsFileIOException;
     Product getProduct(String productType);
 
 }
