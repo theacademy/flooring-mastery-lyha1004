@@ -24,7 +24,9 @@ public class ProductDaoImplTest {
         List<Product> products = productDao.readProducts();
         assertNotNull(products);
         assertFalse(products.isEmpty());
+        assertEquals(4, products.size());
     }
+
 
     @Test
     public void testGetProduct() {

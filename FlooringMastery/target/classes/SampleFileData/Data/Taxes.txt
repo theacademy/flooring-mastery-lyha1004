@@ -3,4 +3,3 @@ TX,Texas,4.45
 WA,Washington,9.25
 KY,Kentucky,6.00
 CA,Calfornia,25.00
-LA,Louisiana,5.00
