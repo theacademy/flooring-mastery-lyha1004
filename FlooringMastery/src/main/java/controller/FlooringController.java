@@ -83,8 +83,7 @@ public class FlooringController {
                 while (true) {
                     try {
                         String orderDateString = view.getOrderDateString();
-                        service.validateDate(orderDateString);
-                        LocalDate orderDate = LocalDate.parse(orderDateString, DateTimeFormatter.ofPattern("MM-dd-yyyy"));
+                        LocalDate orderDate = service.validateDate(orderDateString);
                         newOrder.setOrderDate(orderDate);
                         break;
                     } catch (DataValidationException e) {

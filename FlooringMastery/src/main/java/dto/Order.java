@@ -126,22 +126,6 @@ public class Order {
         return total;
     }
 
-//    public void updateFields(Order updatedOrder) {
-//        if (!updatedOrder.getCustomerName().isEmpty()) {
-//            this.customerName = updatedOrder.getCustomerName();
-//        }
-//        if (!updatedOrder.getState().isEmpty()) {
-//            this.state = updatedOrder.getState();
-//        }
-//        if (!updatedOrder.getProductType().isEmpty()) {
-//            this.productType = updatedOrder.getProductType();
-//            this.costPerSquareFoot = updatedOrder.getCostPerSquareFoot();
-//            this.laborCostPerSquareFoot = updatedOrder.getLaborCostPerSquareFoot();
-//        }
-//        if (updatedOrder.getArea() != null) {
-//            this.area = updatedOrder.getArea();
-//        }
-//    }
 
     @Override
     public String toString() {
