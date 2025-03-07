@@ -31,11 +31,7 @@ class OrderServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        OrderDao orderDaoStub = new OrderDaoStubImpl();
-        ProductDao productDaoStub = new ProductDaoStubImpl();
-        TaxDao taxDaoStub = new TaxDaoStubImpl();
-
-        orderService = new OrderServiceImpl(orderDaoStub, productDaoStub, taxDaoStub);
+        
     }
 
     private Order createSampleOrder() {

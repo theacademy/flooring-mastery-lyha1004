@@ -26,8 +26,7 @@ public class ProductDaoImplTest {
         assertFalse(products.isEmpty());
         assertEquals(4, products.size());
     }
-
-
+    
     @Test
     public void testGetProduct() {
         String productType = "Wood";
