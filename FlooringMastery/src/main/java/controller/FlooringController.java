@@ -188,6 +188,9 @@ public class FlooringController {
                 Product newProduct = service.getProductByType(updatedOrder.getProductType());
                 updatedOrder.setCostPerSquareFoot(newProduct.getCostPerSquareFoot().toString());
                 updatedOrder.setLaborCostPerSquareFoot(newProduct.getLaborCostPerSquareFoot().toString());
+            } else {
+                updatedOrder.setCostPerSquareFoot(existingOrder.getCostPerSquareFoot().toString());
+                updatedOrder.setLaborCostPerSquareFoot(existingOrder.getLaborCostPerSquareFoot().toString());
             }
 
             Tax tax = service.getStateTax(updatedOrder.getState());
