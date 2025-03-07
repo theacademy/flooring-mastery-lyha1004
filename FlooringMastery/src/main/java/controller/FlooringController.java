@@ -142,13 +142,19 @@ public class FlooringController {
 
 
                 newOrder = service.previewOrder(newOrder);
+                try {
+                    boolean isAdded = view.displayOrderSummaryAndIfOrdered(newOrder);
 
-                if (view.displayOrderSummaryAndIfOrdered(newOrder)) {
-                    service.addOrder(newOrder);
-                    view.displayCreateSuccessBanner();
-                } else {
-                    view.displayOrderNotPlacedBanner();
+                    if (isAdded) {
+                        service.addOrder(newOrder);
+                        view.displayCreateSuccessBanner();
+                    } else {
+                        view.displayOrderNotPlacedBanner();
+                    }
+                } catch (DataValidationException e) {
+                    view.displayErrorMessage(e.getMessage());
                 }
+
 
                 validOrder = true;
 

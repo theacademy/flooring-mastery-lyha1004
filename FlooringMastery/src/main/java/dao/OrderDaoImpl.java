@@ -22,12 +22,21 @@ public class OrderDaoImpl implements OrderDao{
     }
 
     @Override
+    public Order getOrder(int orderNumber, LocalDate orderDate) {
+        List<Order> orders = getOrders(orderDate);
+        return orders.stream()
+                .filter(order -> order.getOrderNumber() == orderNumber)
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
     public List<Order> getAllOrders() {
-        List<Order> allOders = new ArrayList<>();
+        List<Order> allOrders = new ArrayList<>();
         for (List<Order> orderList : orders.values()) {
-            allOders.addAll(orderList);
+            allOrders.addAll(orderList);
         }
-        return allOders;
+        return allOrders;
     }
 
     @Override

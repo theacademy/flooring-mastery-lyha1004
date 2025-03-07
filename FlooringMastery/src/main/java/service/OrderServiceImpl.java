@@ -8,6 +8,7 @@ import dto.Tax;
 import ui.UserIO;
 import ui.UserIOImpl;
 
+import javax.xml.crypto.Data;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -43,11 +44,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order getOrder(int orderNumber, LocalDate orderDate) {
-        List<Order> orders = orderDao.getOrders(orderDate);
-        return orders.stream()
-                .filter(order -> order.getOrderNumber() == orderNumber)
-                .findFirst()
-                .orElse(null);
+        return orderDao.getOrder(orderNumber, orderDate);
     }
 
     @Override
@@ -61,7 +58,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void editOrder(Order order) {
+    public void editOrder(Order order) throws OrderNotFoundException{
         List<Order> orders = orderDao.getOrders(order.getOrderDate());
         boolean orderFound = false;
 
@@ -128,7 +125,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Product getProductByType(String type) {
+    public Product getProductByType(String type) throws DataValidationException{
         Product product = productDao.getProduct(type);
         if (product == null) {
             throw new DataValidationException("Product type not found: " + type);
@@ -142,7 +139,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Tax getStateTax(String state) {
+    public Tax getStateTax(String state) throws DataValidationException{
         if (state == null || state.isEmpty()) {
             throw new DataValidationException("State abbreviation cannot be null or empty.");
         }
@@ -155,7 +152,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public LocalDate validateDate(String date) {
+    public LocalDate validateDate(String date) throws DataValidationException{
         while (true) {
             try {
                 LocalDate orderDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("MM-dd-yyyy"));
@@ -171,7 +168,7 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public String validateName(String customerName) {
+    public String validateName(String customerName) throws DataValidationException{
         if (customerName == null || !customerName.matches("[a-zA-Z0-9., ]+")) {
             throw new DataValidationException("Invalid Customer Name.");
         }
@@ -179,7 +176,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public String validateState(String state) {
+    public String validateState(String state) throws DataValidationException{
         List<Tax> taxes = taxDao.getAllTaxInfo();
         boolean stateExists = taxes.stream()
                 .anyMatch(tax -> tax.getStateAbbreviation().equalsIgnoreCase(state));
@@ -191,7 +188,7 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public String validateProductType(String productType) {
+    public String validateProductType(String productType) throws DataValidationException{
         List<Product> products = productDao.readProducts();
         boolean productAvail = products.stream().anyMatch(product -> product.getProductType().equalsIgnoreCase(productType));
         if (!productAvail) {
@@ -201,7 +198,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public BigDecimal validateArea(String input) {
+    public BigDecimal validateArea(String input) throws DataValidationException{
         try {
             BigDecimal area = new BigDecimal(input);
             if (area.compareTo(BigDecimal.valueOf(100)) < 0) {
@@ -215,7 +212,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order calculateOrderCost(Order order) {
+    public Order calculateOrderCost(Order order) throws DataValidationException {
         try {
             BigDecimal materialCost = calculateMaterialCost(order);
             BigDecimal laborCost = calculateLaborCost(order);

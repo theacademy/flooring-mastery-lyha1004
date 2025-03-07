@@ -22,7 +22,7 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public void loadProducts() {
+    public void loadProducts() throws ProductsFileIOException{
         try (BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(PRODUCT_FILE)))) {
             String line;
             br.readLine();

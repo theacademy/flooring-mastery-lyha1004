@@ -1,0 +1,2 @@
+OrderNumber,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total,OrderDate
+0,Ada Lovelace,TX,4.45,Tile,249,3.50,4.15,871.50,1033.35,84.77,1989.62,09-09-2025

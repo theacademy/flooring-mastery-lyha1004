@@ -31,6 +31,15 @@ public class OrderDaoStubImpl implements OrderDao {
     }
 
     @Override
+    public Order getOrder(int orderNumber, LocalDate orderDate) {
+        List<Order> orders = getOrders(orderDate);
+        return orders.stream()
+                .filter(order -> order.getOrderNumber() == orderNumber)
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
     public List<Order> getAllOrders() {
         return orders;
     }

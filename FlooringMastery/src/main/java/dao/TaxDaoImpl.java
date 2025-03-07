@@ -32,7 +32,7 @@ public class TaxDaoImpl implements TaxDao {
     }
 
     @Override
-    public void unmarshallStateTax() {
+    public void unmarshallStateTax() throws TaxFileIOException{
         try (BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(TAX_FILE)))) {
             String line;
             br.readLine();

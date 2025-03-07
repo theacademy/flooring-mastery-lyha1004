@@ -70,8 +70,18 @@ public class FlooringView {
     public boolean displayOrderSummaryAndIfOrdered(Order order) {
         io.print("OrderNumber,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total");
         io.print(order.toString());
-        String userInput = io.readString("Do you want to place this order? (yes/no):");
-        return userInput.equalsIgnoreCase("yes");
+
+        while (true) {
+            String userInput = io.readString("Do you want to save this order? (yes/no):").trim().toLowerCase();
+
+            if (userInput.equals("yes") || userInput.equals("y")) {
+                return true;
+            } else if (userInput.equals("no") || userInput.equals("n")) {
+                return false;
+            } else {
+                io.print("Invalid input. Please enter 'yes' or 'no' (or 'y'/'n').");
+            }
+        }
     }
 
     public void displayProductList(List<Product> products) {
@@ -94,9 +104,20 @@ public class FlooringView {
     public boolean displayUpdatedOrderAndIfSaved(Order order) {
         io.print("OrderNumber,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total");
         io.print(order.toString());
-        String userInput = io.readString("Do you want to save this order? (yes/no):");
-        return userInput.equalsIgnoreCase("yes");
+
+        while (true) {
+            String userInput = io.readString("Do you want to save this order? (yes/no):").trim().toLowerCase();
+
+            if (userInput.equals("yes") || userInput.equals("y")) {
+                return true;
+            } else if (userInput.equals("no") || userInput.equals("n")) {
+                return false;
+            } else {
+                io.print("Invalid input. Please enter 'yes' or 'no' (or 'y'/'n').");
+            }
+        }
     }
+
 
     public void displayOrderInfo(Order order) {
         io.print("OrderNumber,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total");

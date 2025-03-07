@@ -7,8 +7,6 @@ import java.util.List;
 
 public interface TaxDao {
     List<Tax> getAllTaxInfo();
-
     Tax getStateTax(String state);
-
     void unmarshallStateTax();
 }
