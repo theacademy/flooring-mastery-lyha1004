@@ -78,7 +78,7 @@ public class FlooringView {
         for (Product product : products) {
             io.print("Product Type: " + product.getProductType());
             io.print("Cost per Square Foot: " + product.getCostPerSquareFoot());
-            io.print("Labor Cost per Square Foot" + product.getLaborCostPerSquareFoot());
+            io.print("Labor Cost per Square Foot: " + product.getLaborCostPerSquareFoot());
             io.print("-------------------------------");
         }
     }
