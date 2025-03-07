@@ -156,6 +156,7 @@ public class FlooringView {
         String state = io.readString("Enter customer state abbreviation (" + existingOrder.getState() + "): ");
         updatedOrder.setState(state.isEmpty() ? existingOrder.getState() : state);
 
+        displayProductList(products);
         String productType = io.readString("Please Select a Product from the list above (" + existingOrder.getProductType() + "): ");
         updatedOrder.setProductType(productType.isEmpty() ? existingOrder.getProductType() : productType);
 

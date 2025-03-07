@@ -21,10 +21,6 @@ public class OrderDaoStubImpl implements OrderDao {
         testOrder.setArea(new BigDecimal(249));
     }
 
-    public OrderDaoStubImpl(Order order) {
-        this.testOrder = order;
-    }
-
     @Override
     public List<Order> getOrders(LocalDate date) {
         return orders;
