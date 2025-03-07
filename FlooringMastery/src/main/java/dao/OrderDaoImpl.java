@@ -14,9 +14,9 @@ public class OrderDaoImpl implements OrderDao{
 
     @Override
     public List<Order> getOrders(LocalDate date) {
-        List<Order> ordersForDate = orders.get(date);
-        if (ordersForDate == null) {
-            return new ArrayList<>();
+        List<Order> ordersForDate = new ArrayList<>();
+        if (orders.containsKey(date)) {
+            ordersForDate = orders.get(date);
         }
         return ordersForDate;
     }

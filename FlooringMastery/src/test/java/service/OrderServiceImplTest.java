@@ -163,20 +163,6 @@ class OrderServiceImplTest {
         assertEquals(order.getCustomerName(), previewedOrder.getCustomerName());
     }
 
-    @Test
-    void testUpdateOrder() {
-        LocalDate date = LocalDate.now();
-        Order order = createSampleOrder();
-        order.setOrderNumber(1);
-        orderService.addOrder(order);
-
-        Order updatedOrder = createSampleOrder();
-        updatedOrder.setCustomerName("Jane Doe");
-        orderService.updateOrder(order, updatedOrder);
-
-        Order retrievedOrder = orderService.getOrder(1, date);
-        assertEquals("Jane Doe", retrievedOrder.getCustomerName());
-    }
 
     @Test
     void testExportData() {

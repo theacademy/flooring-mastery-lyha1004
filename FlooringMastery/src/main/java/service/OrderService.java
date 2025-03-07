@@ -16,7 +16,9 @@ public interface OrderService {
     void removeOrder(int orderNumber, LocalDate orderDate);
     void editOrder(Order existingOrder);
     Order previewOrder(Order order);
-    Order updateOrder(Order existingOrder, Order updatedOrder);
+
+    //Order updateOrderFields(Order updatedOrder, Order existingOrder, List<Product> products);
+
     void exportData(LocalDate date);
 
     void exportAllData();

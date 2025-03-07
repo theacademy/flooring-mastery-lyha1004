@@ -16,7 +16,6 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class OrderServiceImpl implements OrderService {
@@ -79,7 +78,6 @@ public class OrderServiceImpl implements OrderService {
         }
 
         orders.add(order);
-
         orderDao.editOrder(order.getOrderDate(), orders);
     }
 
@@ -89,12 +87,6 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderNumber(generateOrderNumber());
         order = calculateOrderCost(order);
         return order;
-    }
-
-    @Override
-    public Order updateOrder(Order existingOrder, Order updatedOrder) {
-        existingOrder.updateFields(updatedOrder);
-        return calculateOrderCost(existingOrder);
     }
 
     @Override
@@ -151,7 +143,15 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Tax getStateTax(String state) {
-        return taxDao.getStateTax(state);
+        if (state == null || state.isEmpty()) {
+            throw new DataValidationException("State abbreviation cannot be null or empty.");
+        }
+        state = state.toUpperCase();
+        Tax tax = taxDao.getStateTax(state);
+        if (tax == null) {
+            throw new DataValidationException("State abbreviation not found: " + state);
+        }
+        return tax;
     }
 
     @Override
@@ -188,6 +188,7 @@ public class OrderServiceImpl implements OrderService {
         }
         return state;
     }
+
 
     @Override
     public String validateProductType(String productType) {

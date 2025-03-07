@@ -128,29 +128,23 @@ public class FlooringView {
         io.print("Order will NOT be removed.");
     }
 
-    public Order getUpdatedOrderInfo(Order existingOrder, List<Product> products) {
-        String customerName = io.readString("Enter customer name:");
-        String state = io.readString("Enter customer state abbreviation:");
+    public void getUpdatedOrderInfo(Order updatedOrder, Order existingOrder, List<Product> products) {
+        String customerName = io.readString("Enter customer name (" + existingOrder.getCustomerName() + "): ");
+        updatedOrder.setCustomerName(customerName.isEmpty() ? existingOrder.getCustomerName() : customerName);
 
-        displayProductList(products);
-        String productType = io.readString("Please Select a Product from the list above: ");
-        String areaString = io.readString("Enter the area:");
+        String state = io.readString("Enter customer state abbreviation (" + existingOrder.getState() + "): ");
+        updatedOrder.setState(state.isEmpty() ? existingOrder.getState() : state);
 
-        if (!customerName.isEmpty()) {
-            existingOrder.setCustomerName(customerName);
-        }
-        if (!state.isEmpty()) {
-            existingOrder.setState(state);
-        }
-        if (!productType.isEmpty()) {
-            existingOrder.setProductType(productType);
-        }
-        if (!areaString.isEmpty()) {
-            existingOrder.setArea(new BigDecimal(areaString));
-        }
+        String productType = io.readString("Please Select a Product from the list above (" + existingOrder.getProductType() + "): ");
+        updatedOrder.setProductType(productType.isEmpty() ? existingOrder.getProductType() : productType);
 
-
-        return existingOrder;
+        String areaString = io.readString("Enter the area (" + existingOrder.getArea() + "): ");
+        if (areaString.isEmpty()) {
+            updatedOrder.setArea(existingOrder.getArea());
+        } else {
+            BigDecimal area = new BigDecimal(areaString);
+            updatedOrder.setArea(area);
+        }
     }
 
     public void displayEditSuccessBanner() {
