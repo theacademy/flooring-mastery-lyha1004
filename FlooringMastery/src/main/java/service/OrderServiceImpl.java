@@ -164,7 +164,7 @@ public class OrderServiceImpl implements OrderService {
                 }
                 return orderDate;
             } catch (DateTimeParseException e) {
-                throw new DataValidationException("Invalid input. Please enter a valid date in MM-dd-yyyy format.");
+                throw new DataValidationException("Invalid input. Please enter a valid date in MM-dd-yyyy format.", e);
             }
         }
     }
@@ -201,9 +201,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public BigDecimal validateArea(BigDecimal area) {
+    public BigDecimal validateArea(String input) {
         try {
-            if (area == null || area.compareTo(BigDecimal.valueOf(100)) < 0) {
+            BigDecimal area = new BigDecimal(input);
+            if (area.compareTo(BigDecimal.valueOf(100)) < 0) {
                 throw new DataValidationException("Area must be at least 100 sq ft.");
             }
             return area;

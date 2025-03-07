@@ -132,8 +132,8 @@ public class FlooringController {
 
                 do {
                     try {
-                        BigDecimal area = new BigDecimal(view.getAreaString());
-                        service.validateArea(area);
+                        String areaString = view.getAreaString();
+                        BigDecimal area = service.validateArea(areaString);
                         newOrder.setArea(area);
                         break;
                     } catch (DataValidationException e) {

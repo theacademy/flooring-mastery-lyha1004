@@ -16,11 +16,7 @@ public interface OrderService {
     void removeOrder(int orderNumber, LocalDate orderDate);
     void editOrder(Order existingOrder);
     Order previewOrder(Order order);
-
-    //Order updateOrderFields(Order updatedOrder, Order existingOrder, List<Product> products);
-
     void exportData(LocalDate date);
-
     void exportAllData();
 
     Product getProductByType(String type);
@@ -36,6 +32,6 @@ public interface OrderService {
     String validateName(String customerName);
     String validateState(String state);
     String validateProductType(String productType);
-    BigDecimal validateArea(BigDecimal area);
+    BigDecimal validateArea(String area);
 
 }

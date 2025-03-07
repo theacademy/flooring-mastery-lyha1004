@@ -20,6 +20,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class OrderServiceImplTest {
     private OrderServiceImpl orderService;
 
+
+
     public OrderServiceImplTest() {
         ApplicationContext ctx =
                 new ClassPathXmlApplicationContext("applicationContext.xml");
@@ -275,6 +277,34 @@ class OrderServiceImplTest {
     }
 
     @Test
+    void testNullStateThrowsException() {
+        Exception exception = assertThrows(DataValidationException.class, () -> {
+            orderService.getStateTax(null);
+        });
+
+        assertEquals("State abbreviation cannot be null or empty.", exception.getMessage());
+    }
+
+    @Test
+    void testEmptyStateThrowsException() {
+        Exception exception = assertThrows(DataValidationException.class, () -> {
+            orderService.getStateTax("");
+        });
+
+        assertEquals("State abbreviation cannot be null or empty.", exception.getMessage());
+    }
+
+    @Test
+    void testInvalidStateThrowsException() {
+        Exception exception = assertThrows(DataValidationException.class, () -> {
+            orderService.getStateTax("XX");
+        });
+
+        assertEquals("State abbreviation not found: XX", exception.getMessage());
+    }
+
+
+    @Test
     void testValidateProductTypeWithInvalidType() {
         String invalidType = "InvalidProduct";
         DataValidationException exception = assertThrows(DataValidationException.class, () -> {
@@ -300,10 +330,9 @@ class OrderServiceImplTest {
         assertEquals("We do not have this product available. Please look at our list and enter an available product.", exception.getMessage());
     }
 
-
     @Test
     void testValidateAreaWithInvalidArea() {
-        BigDecimal invalidArea = new BigDecimal("50");
+        String invalidArea = "50";
         DataValidationException exception = assertThrows(DataValidationException.class, () -> {
             orderService.validateArea(invalidArea);
         });
@@ -313,27 +342,38 @@ class OrderServiceImplTest {
     @Test
     void testValidateArea_NullAreaThrowsException() {
         DataValidationException exception = assertThrows(DataValidationException.class, () -> {
-            orderService.validateArea(null);
+            orderService.validateArea("");
         });
 
-        assertEquals("Area must be at least 100 sq ft.", exception.getMessage());
+        assertEquals("Invalid area. Please enter a valid number.", exception.getMessage());
     }
 
     @Test
     void testValidateAreaWithValidArea() {
-        BigDecimal validArea = new BigDecimal("150");
+        String validArea = "150";
+        BigDecimal comparison = new BigDecimal("150");
         BigDecimal result = orderService.validateArea(validArea);
-        assertEquals(validArea, result);
+        assertEquals(comparison, result);
     }
 
     @Test
     void testInvalidAreaException() {
-        BigDecimal invalidArea = new BigDecimal("50");
+        String invalidArea = "50";
         Exception exception = assertThrows(DataValidationException.class, () -> {
             orderService.validateArea(invalidArea);
         });
 
         assertEquals("Area must be at least 100 sq ft.", exception.getMessage());
+    }
+
+    @Test
+    void testInvalidAreaInputException() {
+        String invalidArea = "abc";
+        Exception exception = assertThrows(DataValidationException.class, () -> {
+            orderService.validateArea(invalidArea);
+        });
+
+        assertEquals("Invalid area. Please enter a valid number.", exception.getMessage());
     }
 
     @Test
